@@ -1,0 +1,42 @@
+#importing libraries
+import sqlite3
+
+# Connect to or create a database file named "database.db"
+conn = sqlite3.connect("kba_database.db")
+
+# Create a cursor object to execute SQL commands
+cursor = conn.cursor()
+
+# Create a table named "data" with a single column named "value"
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS data (
+    value TEXT
+)
+""")
+
+# Save changes to the database
+conn.commit()
+
+# Receive input from the user
+value = input("Enter a value: ")
+
+# Save the user input to the database
+cursor.execute("""
+INSERT INTO data (value)
+VALUES (?)
+""", (value,))
+
+# Save changes to the database
+conn.commit()
+
+# Retrieve and display saved data
+cursor.execute("""
+SELECT * FROM data
+""")
+
+print("Saved data:")
+for row in cursor.fetchall():
+    print(row[0])
+
+# Close the database connection
+conn.close()
